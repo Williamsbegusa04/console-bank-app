@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
@@ -152,6 +154,111 @@ public class Main {
             System.out.println("Transaction attempt Finished ");
         }
         System.out.println("ba2 balance: " + ba2.getAccountBalance());   // 5050.75
-    }
+        //=========================================================================================================================
+        //Scanner Menu
+        //=========================================================================================================================
+        //Create a Scanner on System.in in Main (or a new BankApp class with its own main)
+        Scanner sc = new Scanner(System.in);
+
+        int choice = 0;
+        BankAccount account = null;
+        while(choice != 5)
+        {
+            System.out.println("1. Create Account.");
+            System.out.println("2. Deposit.");
+            System.out.println("3. Withdraw.");
+            System.out.println("4. View Balance.");
+            System.out.println("5. Exit.");
+            choice = sc.nextInt();
+            switch(choice)
+            {
+                case 1 :
+                    //1 Create account: ask for number, name and type (savings or current),
+                    // create the right object and keep it in a variable
+                    System.out.println("Please Enter your Account Number");
+                    String input_accountnumber = sc.next();
+                    sc.nextLine();
+                    System.out.println("Please Enter your Account Name");
+                    String input_accountname = sc.nextLine();
+                    System.out.println("Please Enter your Account type: Savings or Current ");
+                    String input_accounttype = sc.next();
+                    //create account based on user input
+                    if(input_accounttype.equalsIgnoreCase("savings"))
+                    {
+                        account = new SavingsAccount(input_accountnumber,input_accountname,0.05);
+                        System.out.println("Savings Account created for "+account.getAccountName());
+                    }
+                    else if (input_accounttype.equalsIgnoreCase("current"))
+                    {
+                        account = new CurrentAccount(input_accountnumber,input_accountname,20000);
+                        System.out.println("Current Account created for "+account.getAccountName());
+                    }
+                    else
+                    {
+                        System.out.println("Invalid account type");
+                        break;
+                    }
+                    break;
+                case 2 :
+                    //must have an account before this action
+                    // Deposit: ask for an amount and call deposit
+                    if (account == null)
+                    {
+                        System.out.println("You need to create an account first.");
+                        break;
+                    }
+                    else
+                    {
+                        System.out.println("How much would you like to deposit? ");
+                        double  input_deposit = sc.nextDouble();
+                        account.deposit(input_deposit);
+                    }
+                    break;
+                case 3 :
+                    //Withdraw: ask for an amount and call withdraw inside try/catch
+                    if (account == null)
+                    {
+                        System.out.println("You need to create an account first.");
+                        break;
+                    }
+                    else
+                    {
+                        System.out.println("How much would you like to withdraw? ");
+                        double  input_withdraw = sc.nextDouble();
+                        try
+                        {
+                            account.withdraw(input_withdraw);
+                        }
+                        catch (InsufficientFundsException e)
+                        {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                    break;
+                case 4 :
+                    //View balance: print name, number and balance
+                    if (account == null)
+                    {
+                        System.out.println("You need to create an account first.");
+                        break;
+                    }
+                    else
+                    {
+                        System.out.println(account.getAccountName());
+                        System.out.println(account.getAccountNumber());
+                        System.out.println(account.getAccountBalance());
+                    }
+                    break;
+                case 5 :
+                    //Exit: print a goodbye message and end the loop
+                    System.out.println("Thank you for banking with us , Goodbye");
+                    break;
+                default : System.out.println("Invalid input");
+            }
+        }
+
+
+
+}
 
 }

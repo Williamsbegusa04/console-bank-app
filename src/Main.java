@@ -17,12 +17,24 @@ public class Main {
         System.out.println("After deposit: "+ba.getAccountBalance());
 
         //Normal withdrawal. Withdraw 2000, print the balance. Expected: 3000.
-        ba.withdraw(2000);
+       try
+       {
+           ba.withdraw(2000);
+       } catch (InsufficientFundsException e)
+       {
+           System.out.println(e.getMessage());
+       }
         System.out.println("After withdrawal: "+ba.getAccountBalance());
 
         //Withdraw more than the balance. Try 10000.
         // Expected: the “Insufficient funds” message and the balance unchanged at 3000.
-        ba.withdraw(10000);
+        try
+        {
+            ba.withdraw(10000);
+        } catch (InsufficientFundsException e)
+        {
+            System.out.println(e.getMessage());
+        }
         System.out.println("After  failed  withdrawal: "+ba.getAccountBalance());
 
         //Deposit a negative amount. Try -50.
@@ -37,7 +49,13 @@ public class Main {
 
         //Withdraw exactly the full balance.
         // Expected: this works and the balance is 0.
-        ba.withdraw(3000);
+        try
+        {
+            ba.withdraw(3000);
+        } catch (InsufficientFundsException e)
+        {
+            System.out.println(e.getMessage());
+        }
         System.out.println("After withdrawal: "+ba.getAccountBalance());
 
         //Two separate accounts. Create a second account with different details,
@@ -64,14 +82,32 @@ public class Main {
         //Current: 20000 limit, deposit 5000, withdraw 15000, expect balance -10000
         CurrentAccount ca = new CurrentAccount("125535467","Michael Lee",20000);
         ca.deposit(5000);
-        ca.withdraw(15000);
+        try
+        {
+            ca.withdraw(15000);
+        } catch (InsufficientFundsException e)
+        {
+            System.out.println(e.getMessage());
+        }
         System.out.println("After overdraft "+ca.getAccountBalance());
 
         //Current: withdraw 15000 again, expect it to be rejected (-25000 is past the limit)
-        ca.withdraw(15000);//insufficient funds
+        try
+        {
+            ca.withdraw(15000);
+        } catch (InsufficientFundsException e)
+        {
+            System.out.println(e.getMessage());
+        }
 
         //Plain BankAccount: over-withdraw is still rejected
-        ba2.withdraw(11000);
+        try
+        {
+            ba2.withdraw(11000);
+        } catch (InsufficientFundsException e)
+        {
+            System.out.println(e.getMessage());
+        }
         System.out.println("After withdrawal: "+ba2.getAccountBalance());
 
         //Put a SavingsAccount and a CurrentAccount in BankAccount variables and call withdraw on each (polymorphism)
@@ -79,12 +115,43 @@ public class Main {
         BankAccount ba4 = new CurrentAccount("11111100","Funke Akindele",20000);
         ba3.deposit(30000);
         ba4.deposit(30000);
-        ba3.withdraw(40000);
+        try
+        {
+            ba3.withdraw(40000);
+        } catch (InsufficientFundsException e)
+        {
+            System.out.println(e.getMessage());
+        }
         System.out.println("The account balance for "+ba3.getAccountName()+" is "+ba3.getAccountBalance());
-        ba4.withdraw(40000);
+        try
+        {
+            ba4.withdraw(40000);
+        } catch (InsufficientFundsException e)
+        {
+            System.out.println(e.getMessage());
+        }
         System.out.println("The account balance for "+ba4.getAccountName()+" is "+ba4.getAccountBalance());
         //=======================================================================================================================================
-
+        //Over-withdraw Tests (InsufficientFundsException)
+        //===========================================================================================================
+        //BankAccount ba2 has 10050.75. Withdraw 11000, expect the exception message.
+        try {
+            ba2.withdraw(11000);
+        } catch (InsufficientFundsException e) {
+            System.out.println(e.getMessage());
+        }finally {
+            System.out.println("Transaction attempt Finished ");
+        }
+        System.out.println("ba2 balance: " + ba2.getAccountBalance());   // 10050.75
+        //BankAccount ba2 has 10050.75. Withdraw 5000, expect it to run no exception message.
+        try {
+            ba2.withdraw(5000);
+        } catch (InsufficientFundsException e) {
+            System.out.println(e.getMessage());
+        }finally {
+            System.out.println("Transaction attempt Finished ");
+        }
+        System.out.println("ba2 balance: " + ba2.getAccountBalance());   // 5050.75
     }
 
 }

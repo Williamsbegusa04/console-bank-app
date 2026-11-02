@@ -43,7 +43,7 @@ public class BankAccount {
             accountBalance += amount;
         }
     }
-    public void withdraw(double amount)
+    public void withdraw (double amount)throws InsufficientFundsException
     {
         if(amount ==0)
         {
@@ -55,7 +55,8 @@ public class BankAccount {
         }
         else if (amount> accountBalance)
         {
-            System.out.println("Insufficient funds");
+            throw new InsufficientFundsException("Insufficient funds. Your Balance is  "
+                    +getAccountNumber()+" You requested for "+amount);
         }
         else
         {

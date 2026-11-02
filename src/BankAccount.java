@@ -63,4 +63,9 @@ public class BankAccount {
         }
     }
 
+    protected void adjustBalance(double amount)
+    {
+        accountBalance += amount;
+    }
+
 }

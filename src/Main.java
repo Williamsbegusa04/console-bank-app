@@ -3,6 +3,8 @@
 public class Main {
     public static void main(String[] args)
     {
+        //Bank Account Tests
+        //=============================================================================================================================
         //Create an account. Print the owner name, account number and balance.
         // Expected balance: 0.
         BankAccount ba = new BankAccount("2105973315","Williams Begusa");
@@ -50,6 +52,39 @@ public class Main {
         // Expected: the new accounts balance should be 10050.75.
         ba2.deposit(50.75);
         System.out.println("After deposit: "+ba2.getAccountBalance());
+        //============================================================================================================================================
+        //Savings and Current  Account  Tests
+        //============================================================================================================================================
+        //Savings: 5% rate, deposit 10000, call addInterest, expect 10500
+        SavingsAccount sa = new SavingsAccount("929828828","Agatha Scofield",0.05);
+        sa.deposit(10000);
+        sa.addInterest();
+        System.out.println("After adding Interest new balance becomes "+sa.getAccountBalance());   //10500
+
+        //Current: 20000 limit, deposit 5000, withdraw 15000, expect balance -10000
+        CurrentAccount ca = new CurrentAccount("125535467","Michael Lee",20000);
+        ca.deposit(5000);
+        ca.withdraw(15000);
+        System.out.println("After overdraft "+ca.getAccountBalance());
+
+        //Current: withdraw 15000 again, expect it to be rejected (-25000 is past the limit)
+        ca.withdraw(15000);//insufficient funds
+
+        //Plain BankAccount: over-withdraw is still rejected
+        ba2.withdraw(11000);
+        System.out.println("After withdrawal: "+ba2.getAccountBalance());
+
+        //Put a SavingsAccount and a CurrentAccount in BankAccount variables and call withdraw on each (polymorphism)
+        BankAccount ba3 = new SavingsAccount("1000004567","Bruce Jordan",0.05);
+        BankAccount ba4 = new CurrentAccount("11111100","Funke Akindele",20000);
+        ba3.deposit(30000);
+        ba4.deposit(30000);
+        ba3.withdraw(40000);
+        System.out.println("The account balance for "+ba3.getAccountName()+" is "+ba3.getAccountBalance());
+        ba4.withdraw(40000);
+        System.out.println("The account balance for "+ba4.getAccountName()+" is "+ba4.getAccountBalance());
+        //=======================================================================================================================================
 
     }
+
 }

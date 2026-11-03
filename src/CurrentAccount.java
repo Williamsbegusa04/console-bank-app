@@ -20,8 +20,8 @@ public class CurrentAccount extends BankAccount {
         }
         else if (getAccountBalance() - amount<-overdraftLimit)
         {
-            throw new InsufficientFundsException("Insufficient funds , you've hit your Overdraftlimit. your balance is: "+getAccountBalance()+"and you requested for: "
-                    +amount+"Your OverdraftLimit is: "+overdraftLimit);
+            throw new InsufficientFundsException("Insufficient funds , you've hit your Overdraftlimit. your balance is: "+getAccountBalance()+" and you requested for: "
+                    +amount+" Your OverdraftLimit is: "+overdraftLimit);
         }
         else
         {

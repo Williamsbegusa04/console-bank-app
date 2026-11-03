@@ -56,7 +56,7 @@ public class BankAccount {
         else if (amount> accountBalance)
         {
             throw new InsufficientFundsException("Insufficient funds. Your Balance is  "
-                    +getAccountNumber()+" You requested for "+amount);
+                    +getAccountBalance()+" You requested for "+amount);
         }
         else
         {

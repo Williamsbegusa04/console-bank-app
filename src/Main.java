@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -169,7 +170,17 @@ public class Main {
             System.out.println("3. Withdraw.");
             System.out.println("4. View Balance.");
             System.out.println("5. Exit.");
-            choice = sc.nextInt();
+            try
+            {
+                choice = sc.nextInt();
+            }
+            catch(InputMismatchException e)
+            {
+                System.out.println("Please enter a number from 1-5");
+                sc.nextLine();
+                choice = 0;
+                continue;
+            }
             switch(choice)
             {
                 case 1 :
@@ -209,9 +220,23 @@ public class Main {
                     }
                     else
                     {
-                        System.out.println("How much would you like to deposit? ");
-                        double  input_deposit = sc.nextDouble();
-                        account.deposit(input_deposit);
+                        boolean valid = false;
+                        while(!valid)
+                        {
+                            System.out.println("How much would you like to deposit? ");
+                            try
+                            {
+                                double  input_deposit = sc.nextDouble();
+                                account.deposit(input_deposit);
+                                valid = true;
+                            }
+                            catch(InputMismatchException e)
+                            {
+                                System.out.println("Invalid amount. Please enter numbers only, for example 5000 or 250.50.");
+                                sc.nextLine();
+                            }
+                        }
+
                     }
                     break;
                 case 3 :
@@ -223,15 +248,25 @@ public class Main {
                     }
                     else
                     {
-                        System.out.println("How much would you like to withdraw? ");
-                        double  input_withdraw = sc.nextDouble();
-                        try
+                        boolean valid = false;
+                        while(!valid)
                         {
-                            account.withdraw(input_withdraw);
-                        }
-                        catch (InsufficientFundsException e)
-                        {
-                            System.out.println(e.getMessage());
+                            System.out.println("How much would you like to withdraw? ");
+                            try
+                            {
+                                double  input_withdraw = sc.nextDouble();
+                                account.withdraw(input_withdraw);
+                                valid = true;
+                            }
+                            catch(InputMismatchException e)
+                            {
+                                System.out.println("Invalid amount. Please enter numbers only, for example 5000 or 250.50.");
+                                sc.nextLine();
+                            }
+                            catch (InsufficientFundsException e)
+                            {
+                                System.out.println(e.getMessage());
+                            }
                         }
                     }
                     break;

@@ -1,4 +1,6 @@
+import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Map;
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -162,14 +164,15 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         int choice = 0;
-        BankAccount account = null;
-        while(choice != 5)
+        Map<String,BankAccount> accounts = new HashMap<>();
+        while(choice != 6)
         {
             System.out.println("1. Create Account.");
             System.out.println("2. Deposit.");
             System.out.println("3. Withdraw.");
             System.out.println("4. View Balance.");
-            System.out.println("5. Exit.");
+            System.out.println("5. List all accounts");
+            System.out.println("6. Exit.");
             try
             {
                 choice = sc.nextInt();
@@ -189,6 +192,12 @@ public class Main {
                     System.out.println("Please Enter your Account Number");
                     String input_accountnumber = sc.next();
                     sc.nextLine();
+                    //check if account already exists
+                    if (accounts.containsKey(input_accountnumber))
+                    {
+                        System.out.println("Account number already exists");
+                        break;
+                    }
                     System.out.println("Please Enter your Account Name");
                     String input_accountname = sc.nextLine();
                     System.out.println("Please Enter your Account type: Savings or Current ");
@@ -196,13 +205,13 @@ public class Main {
                     //create account based on user input
                     if(input_accounttype.equalsIgnoreCase("savings"))
                     {
-                        account = new SavingsAccount(input_accountnumber,input_accountname,0.05);
-                        System.out.println("Savings Account created for "+account.getAccountName());
+                        accounts.put(input_accountnumber,new CurrentAccount(input_accountnumber,input_accountname,20000));
+                        System.out.println("Savings Account created for "+input_accountname);
                     }
                     else if (input_accounttype.equalsIgnoreCase("current"))
                     {
-                        account = new CurrentAccount(input_accountnumber,input_accountname,20000);
-                        System.out.println("Current Account created for "+account.getAccountName());
+                        accounts.put(input_accountnumber,new SavingsAccount(input_accountnumber,input_accountname,0.05));
+                        System.out.println("Current Account created for "+input_accountname);
                     }
                     else
                     {
@@ -213,9 +222,14 @@ public class Main {
                 case 2 :
                     //must have an account before this action
                     // Deposit: ask for an amount and call deposit
-                    if (account == null)
+                    //ask for account number
+                    System.out.println("Enter your account Number");
+                    String deposit_accountnumber = sc.next();
+                    BankAccount deposit_account = accounts.get(deposit_accountnumber);
+
+                    if (deposit_account == null)
                     {
-                        System.out.println("You need to create an account first.");
+                        System.out.println("Account not found");
                         break;
                     }
                     else
@@ -227,7 +241,7 @@ public class Main {
                             try
                             {
                                 double  input_deposit = sc.nextDouble();
-                                account.deposit(input_deposit);
+                                deposit_account.deposit(input_deposit);
                                 valid = true;
                             }
                             catch(InputMismatchException e)
@@ -241,9 +255,13 @@ public class Main {
                     break;
                 case 3 :
                     //Withdraw: ask for an amount and call withdraw inside try/catch
-                    if (account == null)
+                    // ask for account number
+                    System.out.println("Enter your account number");
+                    String withdraw_accountnumber = sc.next();
+                    BankAccount withdraw_account = accounts.get(withdraw_accountnumber);
+                    if (withdraw_account == null)
                     {
-                        System.out.println("You need to create an account first.");
+                        System.out.println("Account not found ");
                         break;
                     }
                     else
@@ -255,7 +273,7 @@ public class Main {
                             try
                             {
                                 double  input_withdraw = sc.nextDouble();
-                                account.withdraw(input_withdraw);
+                                withdraw_account.withdraw(input_withdraw);
                                 valid = true;
                             }
                             catch(InputMismatchException e)
@@ -272,25 +290,37 @@ public class Main {
                     break;
                 case 4 :
                     //View balance: print name, number and balance
-                    if (account == null)
+                    //ask for account number
+                    System.out.println("Enter your account number");
+                    String viewbalance_accountnumber = sc.next();
+                    BankAccount viewbalance_account = accounts.get(viewbalance_accountnumber);
+                    if (viewbalance_account == null)
                     {
-                        System.out.println("You need to create an account first.");
+                        System.out.println("Account not found");
                         break;
                     }
                     else
                     {
-                        System.out.println(account.getAccountName());
-                        System.out.println(account.getAccountNumber());
-                        System.out.println(account.getAccountBalance());
+                        System.out.println(viewbalance_account.getAccountName());
+                        System.out.println(viewbalance_account.getAccountNumber());
+                        System.out.println(viewbalance_account.getAccountBalance());
                     }
                     break;
-                case 5 :
+                    case 5 :
+                        //list all bank accounts by printing all the characteristics for each bankaccount
+                        for(BankAccount account :accounts.values())
+                        {
+                            System.out.println(account.getAccountName()+" "+account.getAccountNumber()+" Balance: "+account.getAccountBalance());
+                        }
+                        break;
+                    case 6 :
                     //Exit: print a goodbye message and end the loop
                     System.out.println("Thank you for banking with us , Goodbye");
                     break;
                 default : System.out.println("Invalid input");
             }
         }
+
 
 
 
